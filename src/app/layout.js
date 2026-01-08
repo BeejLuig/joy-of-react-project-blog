@@ -5,11 +5,13 @@ import {
 } from 'next/font/google';
 import clsx from 'clsx';
 
-import { LIGHT_TOKENS, DARK_TOKENS } from '@/constants';
+import { LIGHT_TOKENS, DARK_TOKENS, BLOG_TITLE, BLOG_DESCRIPTION } from '@/constants';
 
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import './styles.css';
+import MotionPreference from '@/components/MotionPreference';
+import { cookies } from 'next/headers';
 
 const mainFont = Work_Sans({
   subsets: ['latin'],
@@ -24,23 +26,29 @@ const monoFont = Spline_Sans_Mono({
   variable: '--font-family-mono',
 });
 
-function RootLayout({ children }) {
-  // TODO: Dynamic theme depending on user preference
-  const theme = 'light';
+export const metadata = {
+  title: BLOG_TITLE,
+  description: BLOG_DESCRIPTION,
+};
+
+async function RootLayout({ children }) {
+  const theme = (await cookies()).get('theme')?.value ?? 'light';
 
   return (
-    <html
-      lang="en"
-      className={clsx(mainFont.variable, monoFont.variable)}
-      data-color-theme={theme}
-      style={theme === 'light' ? LIGHT_TOKENS : DARK_TOKENS}
-    >
-      <body>
-        <Header theme={theme} />
-        <main>{children}</main>
-        <Footer />
-      </body>
-    </html>
+      <MotionPreference>
+        <html
+          lang="en"
+          className={clsx(mainFont.variable, monoFont.variable)}
+          data-color-theme={theme}
+          style={theme === 'light' ? LIGHT_TOKENS : DARK_TOKENS}
+        >
+          <body>
+            <Header initialTheme={theme}/>
+            <main>{children}</main>
+            <Footer />
+          </body>
+        </html>
+      </MotionPreference>
   );
 }
 

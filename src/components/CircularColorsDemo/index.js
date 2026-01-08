@@ -1,2 +1,3 @@
-export * from './CircularColorsDemo';
-export { default } from './CircularColorsDemo';
+import dynamic from 'next/dynamic';
+
+export default dynamic(() => import('./CircularColorsDemo'));

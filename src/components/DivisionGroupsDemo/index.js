@@ -1,2 +1,3 @@
-export * from './DivisionGroupsDemo';
-export { default } from './DivisionGroupsDemo';
+import dynamic from "next/dynamic";
+
+export default dynamic(() => import('./DivisionGroupsDemo'));
